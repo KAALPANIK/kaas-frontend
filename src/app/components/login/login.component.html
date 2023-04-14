@@ -1,0 +1,40 @@
+<div class="col-md-6 offset-md-3 mt-10">
+   <div class="card">
+      <h4 class="card-header text-center py-3">Login</h4>
+      <div class="card-body">
+         <form [formGroup]="authForm" class="login-container" (ngSubmit)="signIn()">
+            <div class="mb-3">
+               <label class="form-label">Email</label>
+               <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }" />
+               <div *ngIf="isSubmitted && formControls['email'].errors" class="help-block">
+                  <div *ngIf="formControls['email'].errors['required']">Email is required</div>
+               </div>
+            </div>
+         <!--<p [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }">
+            <input type="email" placeholder="Email" formControlName="email">
+         </p>-->
+            <div class="mb-3">
+               <label class="form-label">Password</label>
+               <input type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['password'].errors }" />
+               <div *ngIf="isSubmitted && formControls['password'].errors" class="help-block">
+                  <div *ngIf="formControls['password'].errors['required']">Password is required</div>
+               </div>
+            </div>
+            <a routerLink="/reset-password">Forgot Password?</a>
+          
+            <div class="text-center mt-4" style="display: flex; justify-content: center;">
+               <button [disabled]="loading" class="btn btn-primary inline">
+               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Login
+               </button> &nbsp; &nbsp;
+               <asl-google-signin-button type='standard' size='large' width="200" theme="filled_blue">Google Login</asl-google-signin-button>
+            </div>
+            <br/>
+            <div class="text-center">
+               <a routerLink="/signup">Not registered? Signup</a>
+            </div>
+            <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+         </form>
+      </div>
+   </div>
+</div>
