@@ -1,0 +1,71 @@
+<div class="col-md-6 offset-md-3 mt-10">
+   <div class="card">
+      <h4 class="card-header text-center py-3">Login</h4>
+      <div class="card-body">
+         <form [formGroup]="authForm" class="login-container" (ngSubmit)="signIn()">
+            <div class="mb-3">
+               <label class="form-label">Email</label>
+               <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }" />
+               <div *ngIf="isSubmitted && formControls['email'].errors" class="help-block">
+                  <div *ngIf="formControls['email'].errors['required']">Email is required</div>
+                  <div *ngIf="formControls['email'].errors['email']">Enter valid email</div>
+               </div>
+            </div>
+         <!--<p [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }">
+            <input type="email" placeholder="Email" formControlName="email">
+         </p>-->
+            <div class="mb-3">
+               <label class="form-label">Password</label>
+               <input type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['password'].errors }" />
+               <div *ngIf="isSubmitted && formControls['password'].errors" class="help-block">
+                  <div *ngIf="formControls['password'].errors['required']">Password is required</div>
+               </div>
+            </div>
+            <!--<a data-bs-toggle="modal" data-bs-target="#exampleModal">Forgot Password?</a>-->
+            <a href="/reset-password">Reset Password?</a>
+          
+            <div class="text-center mt-4" style="display: flex; justify-content: center;">
+               <button [disabled]="loading" class="btn btn-primary inline">
+               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Login
+               </button> &nbsp; &nbsp;
+               <asl-google-signin-button type='standard' size='large' width="200" theme="filled_blue">Google Login</asl-google-signin-button>
+            </div>
+            <br/>
+            <div class="text-center">
+               <a routerLink="/signup">Not registered? Signup</a>
+            </div>
+            <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+         </form>
+      </div>
+   </div>
+ 
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <form [formGroup]="pwdResetForm" class="login-container" (ngSubmit)="reset()">
+         <div class="modal-body">
+            <div class="mb-3">
+               <label class="form-label">Email</label>
+               <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'has-error': resetSubmitted && f['email'].errors }" />
+               <div *ngIf="resetSubmitted && f['email'].errors" class="help-block">
+                  <div *ngIf="f['email'].errors['required']">Email is required</div>
+                  <div *ngIf="f['email'].errors['email']">Enter valid email</div>
+               </div>
+            </div>
+            <div *ngIf="emailMsg" class="alert alert-danger mt-3 mb-0">{{emailMsg}}</div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary">Submit</button>
+         </div>
+      </form>
+     </div>
+   </div>
+ </div>
+</div>
