@@ -15,6 +15,7 @@
                 <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }" />
                 <div *ngIf="isSubmitted && formControls['email'].errors" class="help-block">
                    <div *ngIf="formControls['email'].errors['required']">Email required</div>
+                   <div *ngIf="formControls['email'].errors['email']">Enter valid email</div>
                 </div>
              </div>
           <!--<p [ngClass]="{ 'has-error': isSubmitted && formControls['email'].errors }">
@@ -30,10 +31,10 @@
              <div class="mb-3">
                <label class="form-label">Tenant Name</label>
                <select formControlName="tenant" class="form-control">
-                  <option>Select Tenant</option>
+                  <option value="">Select Tenant</option>
                   <option *ngFor="let tenant of tenants">{{tenant.tenant_name}}</option>
               </select>
-              <div *ngIf="formControls['tenant'].touched && formControls['tenant'].invalid" class="alert alert-danger">
+              <div *ngIf="formControls['tenant'].touched && formControls['tenant'].invalid" class="help-block">
                <div *ngIf="formControls['tenant'].errors && formControls['tenant'].errors['required']">Tenant is required.</div>
                </div>
                <!--<input type="tenant" placeholder="Tenant name" formControlName="tenant" class="form-control" [ngClass]="{ 'has-error': isSubmitted && formControls['tenant'].errors }" />
@@ -49,7 +50,8 @@
                 <div class="text-center">
                     <a routerLink="/login">Login</a>
                  </div>
-             </div>            
+             </div>
+             <div *ngIf="successMsg" class="alert alert-success mt-3 mb-0">{{successMsg}}</div>   
          <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
           </form>
        </div>

@@ -7,24 +7,17 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { Role } from './models/role';
-/*import { SignupComponent } from './auth/signup/signup.component';
-import { PostCreateComponent } from './posts/post-create/post-create.component';
-import { PostListComponent } from './posts/post-list/post-list.component';*/
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent }, ///:token
   { path: 'dashboard', component: DashboardComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin]  }
+  //   data: { roles: [Role.Admin]  
   }
-  /*{ path: 'create', component: PostCreateComponent, canActivate: [AuthGuard]},
-  { path: 'edit', component: PostCreateComponent, canActivate: [AuthGuard] },
-  
-  { path: 'signup', component: SignupComponent }*/
 ];
 
 @NgModule({

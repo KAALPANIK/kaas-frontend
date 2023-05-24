@@ -5,7 +5,7 @@ import { User } from '../models/user';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
-const baseUrl = environment.apiUrl + '/kas/api';
+const baseUrl = environment.serverURL + '/kas/api';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,14 @@ export class AuthService {
     this.userSubject.next(null);
     this.router.navigate(['/login']);
   }
+  
+  generatePasswordLink(data: any): Observable<any> {
+    return this.http.put(baseUrl + '/password_link', data);
+  }
+
+  verifyPasswordToken(link: any): Observable<any> {
+    return this.http.put(baseUrl + '/verify_password_token', link);
+  }
 
   resetPassword(data: any): Observable<any> {
     return this.http.post(baseUrl + '/reset_password', data);
@@ -56,6 +64,18 @@ export class AuthService {
   }
 
   tenant() {
-    return this.http.get(baseUrl + '/get_tenant');
+    return this.http.get(baseUrl + '/tenants');
+  }
+
+  getUsertenant(data: any): Observable<any> {
+    return this.http.post(baseUrl + '/get_tenant', data);
+  }
+
+  updateTenant(data: any): Observable<any> {
+    return this.http.post(baseUrl + '/update_tenant', data);
+  }
+
+  verifySocialUser(data: any): Observable<any> {
+    return this.http.post(baseUrl + '/get_user', data);
   }
 }

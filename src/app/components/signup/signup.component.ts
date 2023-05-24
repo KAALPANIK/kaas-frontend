@@ -13,6 +13,7 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   isSubmitted  =  false;
   loading = false;
+  successMsg = '';
   error = '';
   tenants: any;
 
@@ -20,7 +21,7 @@ export class SignupComponent implements OnInit {
     private router : Router, private formBuilder: FormBuilder) {
     this.signupForm  =  this.formBuilder.group({
       username: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       tenant: ['', Validators.required]
   }); }
@@ -43,13 +44,16 @@ export class SignupComponent implements OnInit {
     this.authService.signup(this.signupForm.value)
       .pipe(first())
       .subscribe({
-          next: () => {
-              // get return url from route parameters or default to '/'
-              //const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          next: (response) => {
+            // get return url from route parameters or default to '/'
+            //const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            console.log(response);
+            this.successMsg = "Signup Successful";
+            setTimeout(() => {
               this.router.navigate(['/login']);
+              }, 2000);
           },
           error: error => {
-            console.log(error.error.msg);
               this.error = error.error.msg;
               this.loading = false;
           }

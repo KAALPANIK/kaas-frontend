@@ -14,51 +14,75 @@ import { SocialAuthService, GoogleLoginProvider, SocialUser } from '@abacritt/an
 })
 export class LoginComponent implements OnInit {
   authForm: FormGroup;
+  pwdResetForm: FormGroup;
   isSubmitted  =  false;
+  resetSubmitted  =  false;
   loading = false;
+  successMsg = "";
   error = '';
+  emailMsg = '';
   loggedIn !: boolean;
   user !: SocialUser;
 
-  constructor(private authService : AuthService, 
-    private router : Router, private formBuilder: FormBuilder,
-    private socialService: SocialAuthService) {
+  constructor(private authService : AuthService, private router : Router, 
+    private formBuilder: FormBuilder, private socialService: SocialAuthService) {
+
     this.authForm  =  this.formBuilder.group({
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
-  });
+    });
+
+    this.pwdResetForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+
    }
 
 
   ngOnInit() {
     this.socialService.authState.subscribe((user) => {
       this.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
       this.loggedIn = (user != null);
-      console.log(user);
-
-      if(user){
-        this.router.navigate(['/dashboard']);
+      const user_details = {
+        username: user.name,
+        email: user.email,
+        password: "",
+        tenant: "",
+        login_type: 'google'
       }
+
+      this.authService.verifySocialUser(user_details)
+      .pipe(first())
+      .subscribe(data=> {
+          if(data.status == 200){
+            this.router.navigate(['/dashboard']);
+          }
+          else {
+            this.authService.signup(user_details)
+            .pipe(first())
+            .subscribe(response => {
+                  // get return url from route parameters or default to '/'
+                  //const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                  if(response.status == 200){
+                    this.successMsg = "Signup Successful";
+                    setTimeout(() => {
+                      this.router.navigate(['/dashboard']);
+                      }, 4000);
+                  }
+                  else {
+                    this.error = response.error;
+                    this.loading = false;
+                  }
+            });
+          }
+        });
     });
   }
 
 
   get formControls() { return this.authForm.controls; }
-
-  /*onClickSubmit(data: any) {
-    this.userName = data.userName;
-    this.password = data.password;
-
-    console.log("Login page: " + this.userName);
-    console.log("Login page: " + this.password);
-
-    /*this.authService.login(this.userName, this.password)
-       .subscribe( data => { 
-          console.log("Is Login Success: " + data); 
-    
-         if(data) this.router.navigate(['/expenses']); 
-    });*/
- //}
+  get f() { return this.pwdResetForm.controls; }
 
  signIn(){
   this.isSubmitted = true;
@@ -67,10 +91,6 @@ export class LoginComponent implements OnInit {
   }
   this.error = '';
   this.loading = true;
-  //this.authService.signIn(this.authForm.value);
-  //this.router.navigateByUrl('/admin');
-  console.log(this.authForm.get('email')?.value);
-  console.log(this.authForm.get('password')?.value);
 
   this.authService.login(this.authForm.value)
     .pipe(first())
@@ -81,9 +101,35 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/dashboard']);
         },
         error: error => {
-            this.error = error.error;
-            this.loading = false;
+          console.log(error);
+          // if(error.status != 404){
+          //   this.error = error.msg;
+          // }
+          // else
+          this.error = error.error.msg;
+          this.loading = false;
         }
     });
+}
+
+reset(){
+  this.resetSubmitted = true;
+  if(this.pwdResetForm.invalid){
+    return;
+  }
+  this.emailMsg = '';
+
+  this.authService.generatePasswordLink(this.pwdResetForm.value)
+  .pipe(first())
+  .subscribe({
+      next: () => {
+          //this.router.navigate(['/dashboard']);
+          this.emailMsg = "Password reset link sent to your mail id"
+      },
+      error: error => {
+          this.emailMsg = error.msg;
+          this.loading = false;
+      }
+  });
 }
 }

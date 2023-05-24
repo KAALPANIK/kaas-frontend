@@ -1,1 +1,102 @@
-<button class="btn btn-primary" (click)="logout()">Logout</button>
+<nav class="navbar navbar-expand-xl fixed-top navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Agro Tech</a>
+      <div class="d-flex">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+               Profile   
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tenantModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                  </svg> Settings
+                </a>
+              </li>
+              <li (click)="logout()">
+                <a class="dropdown-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                        <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                    </svg> Logout
+                </a>
+               </li>
+            </ul>
+          </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="tenantModal" tabindex="-1" aria-labelledby="tenantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tenantModalLabel">Tenant Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="tenantForm" (ngSubmit)="submit()">
+                <div class="modal-body">
+                   <div class="mb-4">
+                      <label class="form-label">Tenant Name:</label>
+                      <input type="text" formControlName="tname" class="form-control" [ngClass]="{ 'has-error': isSubmitted && f['tname'].errors }" />
+                      <div *ngIf="isSubmitted && f['tname'].errors" class="help-block">
+                         <div *ngIf="f['tname'].errors['required']">Tenant name is required</div>
+                      </div>
+                   </div>
+                   <!--<div class="mb-3">
+                    <label class="form-label">Preferences</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="preferences"  checked="mode_value" [disabled]="mode_disabled">
+                        <label class="form-check-label" for="preferences">Light mode or Dark mode</label>
+                    </div>
+                    </div>-->
+                  <div class="mb-4">
+                      <label class="form-label">Preferences:</label>
+                      <div class="form-check">
+                      <div class="row">
+                        <div class="col-4">
+                   
+                      <input class="form-check-input" type="radio" value="light_mode" name="preferences" id="light_mode"  formControlName="preferences">
+                      <label class="form-check-label" for="light_mode">
+                        Light Mode
+                      </label>
+                      </div>
+                      <div class="col-4">
+                      <input class="form-check-input" type="radio" value="dark_mode" name="preferences" id="dark_mode"  formControlName="preferences">
+                      <label class="form-check-label" for="dark_mode">
+                        Dark Mode
+                      </label>
+                      </div>
+                    </div>
+                  </div>
+                 </div>
+                 <div class="mb-4">
+                    <label class="form-label">Protected:</label>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="protected" [checked]="protected_value" formControlName="protected" role="switch">
+                      <label class="form-check-label" for="protected">ON/OFF</label>
+                    </div>
+                 </div>
+                 
+                </div>
+                <div class="modal-footer text-center" style="display: block">
+                  <button [disabled]="loading" class="btn btn-primary inline" [hidden]="isEditHidden">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                      Submit
+                    </button>
+                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                <div *ngIf="successMsg" class="alert alert-success mt-3 mb-0">{{successMsg}}</div>
+                <div *ngIf="errorMsg" class="alert alert-danger mt-3 mb-0">{{errorMsg}}</div>
+             </form>
+        </div>
+      </div>
+    </div>
+  </div>

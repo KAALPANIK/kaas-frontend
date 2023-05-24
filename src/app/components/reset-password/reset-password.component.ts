@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -13,9 +13,14 @@ export class ResetPasswordComponent implements OnInit {
   isSubmitted  =  false;
   loading = false;
   error = '';
+  message = '';
+  resetLink = "";
+  pwd_match = '';
   passwordsMatching = false;
   isConfirmPasswordDirty = false;
   confirmPasswordClass = 'form-control';
+  showPassword = false;
+
   newPassword = new FormControl(null, [
     (c: AbstractControl) => Validators.required(c),
     Validators.required,
@@ -26,10 +31,17 @@ export class ResetPasswordComponent implements OnInit {
   ]);
 
 
-  constructor(private authService : AuthService, 
-    private router : Router, private formBuilder: FormBuilder) { }
+  constructor(private authService : AuthService, private route: ActivatedRoute,
+    private router : Router, private formBuilder: FormBuilder) {
+      // this.route.params.subscribe(params => {
+      //   this.resetLink = params['token'];
+      //   console.log(this.resetLink);
+      //  // this.VerifyToken();
+      // });
+     }
   resetPasswordForm = this.formBuilder.group(
     {
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       newPassword: this.newPassword,
       confirmPassword: this.confirmPassword,
@@ -40,11 +52,25 @@ export class ResetPasswordComponent implements OnInit {
   );
   ngOnInit() {
   }
+
   get formControls() { return this.resetPasswordForm.controls; }
+
+  // VerifyToken() {
+  //   this.authService.verifyPasswordToken({ resetLink: this.resetLink }).pipe(first()).subscribe({
+  //     next: () => {
+  //       this.message = 'Verified';
+  //     },
+  //     error: error => {
+  //       this.message = error;
+  //   }
+  //   });
+  // }
+
   onSubmit() {
     this.isSubmitted = true;
     if (this.resetPasswordForm.invalid) {
       console.log("error");
+      this.pwd_match = "Passwords do not match";
       return;
     }
     else {
@@ -55,13 +81,16 @@ export class ResetPasswordComponent implements OnInit {
       this.authService.resetPassword(this.resetPasswordForm.value)
     .pipe(first())
     .subscribe({
-        next: () => {
+        next: (result) => {
+          console.log(result);
             // get return url from route parameters or default to '/'
             //const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-            this.router.navigate(['/login']);
+            this.error = result.msg;
+            //this.router.navigate(['/login']);
         },
         error: error => {
-            this.error = error;
+          console.log(error);
+            this.error = error.msg;
             this.loading = false;
         }
     });
